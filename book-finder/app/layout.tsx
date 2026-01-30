@@ -22,7 +22,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-br" className={openSans.variable}>
-      <body className={`antialiased`}>{children}</body>
+      <body className={`antialiased bg-neutral-900`}>{children}</body>
     </html>
   );
 }

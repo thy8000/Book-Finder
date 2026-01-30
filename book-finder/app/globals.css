@@ -10,7 +10,10 @@
   --color-foreground: var(--foreground);
   --font-primary: var(--font-open-sans);
   --font-secondary: var(--font-lato);
+  --color-green-500: #3A7B4C;
 }
+
+
 
 @media (prefers-color-scheme: dark) {
   :root {

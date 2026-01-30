@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import { Header } from "./components";
+import { Header, HeroHeadline } from "./components";
 
 export const metadata: Metadata = {
   title: "Book Finder | Encontre seu próximo livro por título ou autor",
@@ -11,8 +11,12 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <div>
-      <main>
+      <main className="flex flex-col gap-4">
         <Header />
+        <HeroHeadline
+          title="Encontre seu próximo livro"
+          description="Explore milhares de obras e descubra sua próxima leitura favorita"
+        />
       </main>
     </div>
   );
