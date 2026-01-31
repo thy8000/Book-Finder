@@ -5,9 +5,16 @@ import { MagnifyingGlassIcon } from "@phosphor-icons/react";
 interface SearchProps {
     id: string;
     placeholder: string;
+    onChange?: (value: string) => void;
 }
 
-export function Search({ id, placeholder }: SearchProps) {
+export function Search({ id, placeholder, onChange }: SearchProps) {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (onChange) {
+            onChange(e.target.value);
+        }
+    };
+
     return (
         <form className="flex items-center justify-center w-full max-w-2xl mx-auto">
             <div className="relative flex items-center w-full bg-white rounded-full shadow-lg overflow-hidden">
@@ -16,6 +23,7 @@ export function Search({ id, placeholder }: SearchProps) {
                     id={id}
                     name={id}
                     placeholder={placeholder}
+                    onChange={handleChange}
                     className="flex-1 px-6 py-4 text-neutral-800 placeholder-neutral-400 bg-transparent border-none outline-none focus:ring-0"
                 />
                 <button
