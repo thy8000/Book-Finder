@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <div>
-      <main className="flex flex-col gap-4">
+      <main className="flex flex-col gap-10">
         <Header />
         <HeroHeadline
           title="Encontre seu próximo livro"
