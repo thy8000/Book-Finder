@@ -44,14 +44,17 @@ export function BookSearch() {
                     setBooks(data.items);
                     setNoResults(false);
                     setError(null);
-                } else if (status === 404 || !data?.items) {
+                } else if (status === 404 && !data?.items) {
                     setBooks([]);
                     setNoResults(true);
                     setError(null);
-                } else {
+                } else if (status >= 400) {
                     setBooks([]);
                     setNoResults(false);
-                    setError(data?.error || "Erro ao buscar livros");
+                    const errorMessage = typeof data?.error === 'string'
+                        ? data.error
+                        : data?.error?.message || `Erro ao buscar livros (status: ${status})`;
+                    setError(errorMessage);
                 }
             } catch (err) {
                 setBooks([]);
@@ -98,7 +101,7 @@ export function BookSearch() {
                 </div>
             )}
 
-            {noResults && !loading && (
+            {noResults && !loading && !error && (
                 <div className="text-center text-neutral-400">
                     Sua busca não retornou nenhum resultado
                 </div>

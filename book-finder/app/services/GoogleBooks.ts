@@ -19,7 +19,7 @@ export class GoogleBooksService {
         if (response.status === 404) {
           return { data: null, status: 404 };
         }
-        return { data: { error: data.error?.message || "Erro ao buscar livros" }, status: response.status };
+        return { data: { error: data.error || "Erro ao buscar livros" }, status: response.status };
       }
 
       if (!data.items || data.items.length === 0) {
