@@ -3,6 +3,7 @@
 import { useState, useDeferredValue, useEffect, useRef } from "react";
 import { Search, Spinner } from "./";
 import { GoogleBooksService } from "../services/GoogleBooks";
+import { BookCard } from "./BookCard";
 
 export function BookSearch() {
     const [inputValue, setInputValue] = useState("");
@@ -103,12 +104,12 @@ export function BookSearch() {
             )}
 
             {!loading && !error && !noResults && books.length > 0 && (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-                    {books.map((book, index) => (
-                        <div key={book.id || index} className="text-neutral-50">
-                            {book.volumeInfo?.title || "Sem título"}
-                        </div>
-                    ))}
+                <div className="container">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-7 gap-4">
+                        {books.map((book) => (
+                            <BookCard bookData={book} />
+                        ))}
+                    </div>
                 </div>
             )}
         </>

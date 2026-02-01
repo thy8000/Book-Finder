@@ -3,12 +3,14 @@ export class GoogleBooksService {
 
   private async makeRequest(endpoint: string, params?: Record<string, string>): Promise<Response> {
     const url = new URL(endpoint, this.apiUrl);
-    
+
     if (params) {
       Object.entries(params).forEach(([key, value]) => {
         url.searchParams.append(key, value);
       });
     }
+
+    url.searchParams.append("key", process.env.NEXT_PUBLIC_GOOGLE_BOOKS_API_KEY || "");
 
     const response = await fetch(url.toString(), {
       method: "GET",
