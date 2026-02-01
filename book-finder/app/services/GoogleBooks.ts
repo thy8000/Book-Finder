@@ -1,30 +1,18 @@
 export class GoogleBooksService {
-  private readonly apiUrl: string = "https://www.googleapis.com/books/v1/";
-
-  private async makeRequest(endpoint: string, params?: Record<string, string>): Promise<Response> {
-    const url = new URL(endpoint, this.apiUrl);
-
-    if (params) {
-      Object.entries(params).forEach(([key, value]) => {
-        url.searchParams.append(key, value);
-      });
-    }
-
-    url.searchParams.append("key", process.env.NEXT_PUBLIC_GOOGLE_BOOKS_API_KEY || "");
-
-    const response = await fetch(url.toString(), {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    return response;
-  }
+  private readonly apiUrl: string = "/api/books";
 
   async getBooks(query: string): Promise<{ data: any; status: number }> {
     try {
-      const response = await this.makeRequest("volumes", { q: query });
+      const url = new URL(this.apiUrl, window.location.origin);
+      url.searchParams.append("q", query);
+
+      const response = await fetch(url.toString(), {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
       const data = await response.json();
 
       if (!response.ok) {

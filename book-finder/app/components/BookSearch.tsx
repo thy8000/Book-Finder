@@ -83,6 +83,7 @@ export function BookSearch() {
                 id="search"
                 placeholder="Pesquisar por título, autor ou assunto"
                 onChange={handleSearch}
+                hasButton={false}
             />
 
             {loading && (
@@ -107,7 +108,7 @@ export function BookSearch() {
                 <div className="container">
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-7 gap-4">
                         {books.map((book) => (
-                            <BookCard bookData={book} />
+                            <BookCard key={book.id} bookData={book} />
                         ))}
                     </div>
                 </div>

@@ -18,7 +18,7 @@ export function BookCard({ bookData }: CardProps) {
             </picture>
 
             <div className="py-6 flex flex-col gap-3">
-                <h3 className="text-xl font-bold text-neutral-50 group-hover:text-green-500 transition-colors duration-200">
+                <h3 className="text-base font-bold text-neutral-50 group-hover:text-green-500 transition-colors duration-200 line-clamp-3">
                     {book.getCompleteName()}
                 </h3>
 
