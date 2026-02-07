@@ -1,9 +1,7 @@
 export class GoogleBooksService {
-  private readonly apiUrl: string = "/api/books";
-
   async getBooks(query: string): Promise<{ data: any; status: number }> {
     try {
-      const url = new URL(this.apiUrl, window.location.origin);
+      const url = new URL("api/books", window.location.origin);
       url.searchParams.append("q", query);
 
       const response = await fetch(url.toString(), {
@@ -32,4 +30,31 @@ export class GoogleBooksService {
       return { data: { error: errorMessage }, status: 500 };
     }
   }
+
+  async getBook(bookId: string): Promise<{ data: any; status: number }> {
+    try {
+      const url = new URL("api/book", window.location.origin);
+      url.searchParams.append("book", bookId);
+
+      const response = await fetch(url.toString(), {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        return { data: { error: data.error || "Erro ao buscar livro" }, status: response.status };
+      }
+
+      return { data, status: 200 };
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "Erro desconhecido ao buscar livro";
+      return { data: { error: errorMessage }, status: 500 };
+    }
+  }
+
+
 }

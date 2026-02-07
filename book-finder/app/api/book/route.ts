@@ -5,18 +5,17 @@ export async function GET(request: NextRequest) {
     const apiUrl = process.env.GOOGLE_BOOKS_API_URL || "";
 
     const searchParams = request.nextUrl.searchParams;
-    const query = searchParams.get("q");
+    const volumeId = searchParams.get("book");
 
-    if (!query) {
+    if (!volumeId) {
         return NextResponse.json(
-            { error: "Parâmetro 'q' é obrigatório" },
+            { error: "Parâmetro 'book' é obrigatório" },
             { status: 400 }
         );
     }
 
     try {
-        const url = new URL("volumes", apiUrl);
-        url.searchParams.append("q", query);
+        const url = new URL(`volumes/${volumeId}`, apiUrl);
         url.searchParams.append("key", apiKey);
 
         const response = await fetch(url.toString(), {
@@ -30,17 +29,17 @@ export async function GET(request: NextRequest) {
 
         if (!response.ok) {
             return NextResponse.json(
-                { error: data.error?.message || "Erro ao buscar livros" },
+                { error: data.error?.message || "Erro ao buscar livro" },
                 { status: response.status }
             );
         }
 
-        return NextResponse.json(data, { status: 200 });
+        return NextResponse.json(data, { status: response.status });
     } catch (error) {
         const errorMessage =
             error instanceof Error
                 ? error.message
-                : "Erro desconhecido ao buscar livros";
+                : "Erro desconhecido ao buscar livro";
         return NextResponse.json({ error: errorMessage }, { status: 500 });
     }
 }
