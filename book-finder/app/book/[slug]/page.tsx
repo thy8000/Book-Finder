@@ -41,26 +41,40 @@ export default function Page({
                     <section className="grid grid-cols-1 md:grid-cols-12 gap-8 mb-12">
 
                         <div className="md:col-span-8 order-2 md:order-1 flex flex-col justify-center">
-                            <h1 className="text-3xl md:text-5xl font-bold text-gray-900 mb-2">Cidade dos Ossos</h1>
-                            <h2 className="text-xl text-gray-500 mb-4">Os Instrumentos Mortais - Vol. 1</h2>
+                            {bookData?.getTitle() && (
+                                <h1 className="text-xl md:text-4xl font-bold text-green-500 mb-2">{bookData?.getTitle()}</h1>
+                            )}
+                            {bookData?.getSubtitle() && (
+                                <h2 className="text-xl text-gray-500 mb-4">{bookData?.getSubtitle()}</h2>
+                            )}
 
-                            <div className="text-lg mb-6">
-                                Por: <a href="#" className="text-blue-600 hover:underline font-semibold">Cassandra Clare</a>
-                            </div>
+                            {bookData?.getAuthors() && bookData.getAuthors().length > 0 && (
+                                <ul className="flex flex-wrap gap-2 list-none text-lg mb-6">
+                                    <b className="text-neutral-100 font-semibold">Por:</b> <li className="text-neutral-300">{bookData.getAuthors().join(", ")}</li>
+                                </ul>
+                            )}
 
-                            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 bg-gray-50 p-6 rounded-lg border border-gray-100">
-                                <div>
-                                    <span className="block text-xs text-gray-500 uppercase font-bold">ISBN</span>
-                                    <span className="font-mono text-sm">978-8501000000</span>
-                                </div>
-                                <div>
-                                    <span className="block text-xs text-gray-500 uppercase font-bold">Editora</span>
-                                    <span className="text-sm">Galera Record</span>
-                                </div>
-                                <div>
-                                    <span className="block text-xs text-gray-500 uppercase font-bold">Publicação</span>
-                                    <span className="text-sm">Outubro, 2013</span>
-                                </div>
+                            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 bg-neutral-800 p-6 rounded-lg border border-neutral-700">
+                                {bookData?.getISBN() && bookData.getISBN().length > 0 && (
+                                    bookData.getISBN().map((isbn: { type: string; identifier: string }) => (
+                                        <div key={isbn?.identifier}>
+                                            <span className="block text-xs text-neutral-100 uppercase font-bold">{isbn?.type || "ISBN-10"}</span>
+                                            <span className="font-mono text-sm text-neutral-300">{isbn?.identifier}</span>
+                                        </div>
+                                    ))
+                                )}
+                                {bookData?.getPublisher() && (
+                                    <div>
+                                        <span className="block text-xs text-neutral-100 uppercase font-bold">Editora</span>
+                                        <span className="font-mono text-sm text-neutral-300">{bookData.getPublisher()}</span>
+                                    </div>
+                                )}
+                                {bookData?.getPublicationDate() && (
+                                    <div>
+                                        <span className="block text-xs text-neutral-100 uppercase font-bold">Publicação</span>
+                                        <span className="font-mono text-sm text-neutral-300">{new Date(bookData.getPublicationDate()).toLocaleDateString("pt-BR")}</span>
+                                    </div>
+                                )}
                                 <div>
                                     <span className="block text-xs text-gray-500 uppercase font-bold">Páginas</span>
                                     <span className="text-sm">462 págs</span>
@@ -77,9 +91,11 @@ export default function Page({
                         </div>
 
                         <div className="md:col-span-4 order-1 md:order-2 flex justify-center md:justify-end">
-                            <div className="w-48 md:w-64 aspect-[2/3] bg-gray-200 rounded-lg shadow-xl overflow-hidden relative">
-                                <img src="https://placehold.co/400x600/3b82f6/white?text=Capa+do+Livro" alt="Capa do Livro" className="object-cover w-full h-full" />
-                            </div>
+                            <picture className="w-48 md:w-64 aspect-[2/3] bg-gray-200 rounded-lg shadow-xl overflow-hidden relative">
+                                {bookData && bookData.getThumbnail('extraLarge') && (
+                                    <img src={bookData?.getThumbnail('extraLarge')} alt={bookData?.getCompleteName()} className="object-cover w-full h-full" />
+                                )}
+                            </picture>
                         </div>
                     </section>
 

@@ -16,6 +16,14 @@ export class Book {
         return title;
     }
 
+    getTitle(): string {
+        return this.bookData?.volumeInfo?.title || "";
+    }
+
+    getSubtitle(): string {
+        return this.bookData?.volumeInfo?.subtitle || "";
+    }
+
     getAuthors(): string[] {
         return this.bookData?.volumeInfo?.authors || [];
     }
@@ -30,5 +38,17 @@ export class Book {
 
     getLink(): string {
         return `/book/${this.bookData?.id}`;
+    }
+
+    getISBN(): Array<{ type: string; identifier: string }> {
+        return this.bookData?.volumeInfo?.industryIdentifiers || [];
+    }
+
+    getPublisher(): string {
+        return this.bookData?.volumeInfo?.publisher || "";
+    }
+
+    getPublicationDate(): string {
+        return this.bookData?.volumeInfo?.publishedDate || "";
     }
 }
