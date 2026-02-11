@@ -75,18 +75,18 @@ export default function Page({
                                         <span className="font-mono text-sm text-neutral-300">{new Date(bookData.getPublicationDate()).toLocaleDateString("pt-BR")}</span>
                                     </div>
                                 )}
-                                <div>
-                                    <span className="block text-xs text-gray-500 uppercase font-bold">Páginas</span>
-                                    <span className="text-sm">462 págs</span>
-                                </div>
-                                <div>
-                                    <span className="block text-xs text-gray-500 uppercase font-bold">Formato</span>
-                                    <span className="text-sm">Capa Comum</span>
-                                </div>
-                                <div>
-                                    <span className="block text-xs text-gray-500 uppercase font-bold">Idioma</span>
-                                    <span className="text-sm">Português</span>
-                                </div>
+                                {bookData?.getPageCount() && bookData.getPageCount() > 0 && (
+                                    <div>
+                                        <span className="block text-xs text-neutral-100 uppercase font-bold">Páginas</span>
+                                        <span className="font-mono text-sm text-neutral-300">{bookData.getPageCount()} págs</span>
+                                    </div>
+                                )}
+                                {bookData?.getLanguage() && bookData.getLanguage() !== "" && (
+                                    <div>
+                                        <span className="block text-xs text-neutral-100 uppercase font-bold">Idioma</span>
+                                        <span className="font-mono text-sm text-neutral-300">{bookData.getLanguage()}</span>
+                                    </div>
+                                )}
                             </div>
                         </div>
 
@@ -100,23 +100,20 @@ export default function Page({
                     </section>
 
                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-
                         <div className="lg:col-span-8 space-y-12">
-
-                            <section className="bg-blue-50 border border-blue-100 p-6 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-4">
-                                <div>
-                                    <h3 className="font-bold text-lg text-blue-900">Disponível para compra</h3>
-                                    <p className="text-sm text-blue-700">A partir de R$ 49,90</p>
-                                </div>
-                                <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
-                                    <button className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition shadow-md w-full sm:w-auto text-center">
-                                        Comprar Agora
-                                    </button>
-                                    <button className="bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 font-medium py-3 px-6 rounded-lg transition w-full sm:w-auto text-center">
-                                        Ver Lojas
-                                    </button>
-                                </div>
-                            </section>
+                            {bookData?.isBuyable() && (
+                                <section className="bg-neutral-800 border border-neutral-700 p-6 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-4">
+                                    <div>
+                                        <h3 className="font-bold text-lg text-neutral-100">Disponível para compra</h3>
+                                        <p className="text-sm text-neutral-300">A partir de {bookData.getCurrencyCode()} {bookData.getPrice()}</p>
+                                    </div>
+                                    <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+                                        <a href={bookData.getBuyLink()} target="_blank" className="bg-green-500 hover:bg-green-500/80 text-neutral-100 font-bold py-3 px-6 rounded-lg transition shadow-md w-full sm:w-auto text-center">
+                                            Comprar Agora
+                                        </a>
+                                    </div>
+                                </section>
+                            )}
 
                             <section>
                                 <h3 className="text-2xl font-bold text-gray-900 mb-4 border-b pb-2">Sinopse</h3>

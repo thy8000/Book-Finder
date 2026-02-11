@@ -51,4 +51,42 @@ export class Book {
     getPublicationDate(): string {
         return this.bookData?.volumeInfo?.publishedDate || "";
     }
+
+    getPageCount(): number {
+        return this.bookData?.volumeInfo?.pageCount || 0;
+    }
+
+    getLanguage(): string {
+        return this.bookData?.volumeInfo?.language || "";
+    }
+
+    isBuyable(): boolean {
+        return this.bookData?.saleInfo?.saleability === "FOR_SALE";
+    }
+
+    getPrice(): number {
+        var amount = this.bookData?.saleInfo?.listPrice?.amount || 0;
+
+        if (amount === 0 || amount === null || amount === undefined) {
+            return 0;
+        }
+
+        amount = Number(amount);
+
+        return amount.toFixed(2).replace('.', ',');
+    }
+
+    getCurrencyCode(): string {
+        const currencyCode = this.bookData?.saleInfo?.listPrice?.currencyCode || "";
+
+        if (currencyCode === "BRL") {
+            return "R$";
+        }
+
+        return currencyCode;
+    }
+
+    getBuyLink(): string {
+        return this.bookData?.saleInfo?.buyLink || "";
+    }
 }
