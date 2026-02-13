@@ -6,6 +6,8 @@ import { Header } from "@/app/components";
 import { GoogleBooksService } from "@/app/services/GoogleBooks";
 import { Book } from "@/app/entities/Book";
 
+import { StarIcon, StarHalfIcon } from "@phosphor-icons/react";
+
 export default function Page({
     params,
 }: {
@@ -115,77 +117,46 @@ export default function Page({
                                 </section>
                             )}
 
-                            <section>
-                                <h3 className="text-2xl font-bold text-gray-900 mb-4 border-b pb-2">Sinopse</h3>
-                                <div className="prose max-w-none text-gray-700 leading-relaxed space-y-4">
-                                    <p>
-                                        Um mundo oculto está prestes a ser revelado... Quando Clary decide ir a Nova York se divertir numa discoteca, nunca poderia imaginar que testemunharia um assassinato - muito menos um assassinato cometido por três adolescentes cobertos por tatuagens enigmáticas e brandindo armas bizarras.
-                                    </p>
-                                    <p>
-                                        Clary sabe que deve chamar a polícia, mas é difícil explicar um assassinato quando o corpo desaparece no ar e os assassinos são invisíveis para todos, menos para ela. Tão surpresa quanto assustada, Clary aceita ouvir o que eles têm a dizer...
-                                    </p>
-                                    <p>
-                                        E assim começa sua jornada ao lado dos Caçadores de Sombras.
-                                    </p>
-                                </div>
-                            </section>
-
-                            <section>
-                                <h3 className="text-2xl font-bold text-gray-900 mb-6 border-b pb-2">Sobre a Autora</h3>
-                                <div className="flex flex-col sm:flex-row items-start gap-6 bg-white p-4 rounded-lg border border-gray-100 shadow-sm">
-                                    <img src="https://placehold.co/150x150/e5e7eb/6b7280?text=Foto" alt="Cassandra Clare" className="w-24 h-24 rounded-full object-cover border-2 border-gray-200" />
-                                    <div>
-                                        <h4 className="text-lg font-bold text-gray-900">Cassandra Clare</h4>
-                                        <p className="text-sm text-gray-600 mb-3 italic">Autora Best-seller</p>
-                                        <p className="text-gray-700 text-sm leading-relaxed">
-                                            Filha de um casal de norte-americanos, Cassandra Clare nasceu no Irã e passou a maior parte da infância viajando com a família. Antes dos dez anos já tinha vivido na França, na Inglaterra e na Suíça.
-                                        </p>
+                            {bookData?.getDescription() && (
+                                <section>
+                                    <h3 className="text-2xl font-bold text-neutral-100 mb-4 border-b pb-2">Sinopse</h3>
+                                    <div className="prose max-w-none text-neutral-300 leading-relaxed space-y-4">
+                                        {bookData.getDescription()}
                                     </div>
-                                </div>
-                            </section>
+                                </section>
+                            )}
                         </div>
 
                         <aside className="lg:col-span-4 space-y-8">
 
-                            <div className="bg-gray-50 p-6 rounded-xl border border-gray-100">
-                                <h3 className="font-bold text-gray-900 mb-4 uppercase text-sm tracking-wider">Classificação</h3>
+                            <div className="bg-neutral-800 p-6 rounded-xl border border-neutral-700">
+                                <h3 className="font-bold text-neutral-100 mb-4 uppercase text-sm tracking-wider">Classificação</h3>
 
-                                <div className="mb-6">
-                                    <h4 className="text-sm font-semibold text-gray-600 mb-2">Gêneros</h4>
-                                    <div className="flex flex-wrap gap-2">
-                                        <span className="px-3 py-1 bg-white border border-gray-200 rounded-full text-xs font-medium text-gray-600">Fantasia</span>
-                                        <span className="px-3 py-1 bg-white border border-gray-200 rounded-full text-xs font-medium text-gray-600">Jovem Adulto</span>
-                                        <span className="px-3 py-1 bg-white border border-gray-200 rounded-full text-xs font-medium text-gray-600">Romance Paranormal</span>
-                                        <span className="px-3 py-1 bg-white border border-gray-200 rounded-full text-xs font-medium text-gray-600">Aventura</span>
+                                {bookData?.getGenres() && bookData.getGenres().length > 0 && (
+                                    <div className="mb-6">
+                                        <h4 className="text-sm font-semibold text-neutral-100 mb-2">Gêneros</h4>
+                                        <div className="flex flex-wrap gap-2">
+                                            {bookData.getGenres().map((genre: string) => (
+                                                <span key={genre} className="px-3 py-1 bg-white border border-gray-200 rounded-full text-xs font-medium text-gray-600">{genre}</span>
+                                            ))}
+                                        </div>
                                     </div>
-                                </div>
+                                )}
 
-                                <div>
-                                    <h4 className="text-sm font-semibold text-gray-600 mb-2">Subject (Assuntos)</h4>
-                                    <div className="flex flex-wrap gap-2">
-                                        <span className="px-2 py-1 bg-gray-200 rounded text-xs text-gray-700">Magia</span>
-                                        <span className="px-2 py-1 bg-gray-200 rounded text-xs text-gray-700">Demônios</span>
-                                        <span className="px-2 py-1 bg-gray-200 rounded text-xs text-gray-700">Nova York</span>
+                                {!Number.isNaN(bookData?.getAverageRating()) && (
+                                    <div className="mb-6">
+                                        <h4 className="text-sm font-semibold text-neutral-100 mb-2">Classificação (Média)</h4>
+                                        <div className="flex flex-wrap gap-2">
+                                            {Array.from({ length: bookData?.getAverageRating() || 0 }).map((_, index) => (
+                                                <StarIcon key={index} weight="fill" className="w-4 h-4 text-yellow-500" />
+                                            ))}
+
+                                            {!Number.isInteger(bookData?.getAverageRating()) && (
+                                                <StarHalfIcon size={32} weight="fill" className="w-4 h-4 text-yellow-500" />
+                                            )}
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
-
-                            <div className="border-l-4 border-yellow-400 pl-4 py-1">
-                                <h3 className="font-bold text-gray-900 mb-3">Nominações e Prêmios</h3>
-                                <ul className="space-y-2 text-sm text-gray-700">
-                                    <li className="flex items-start gap-2">
-                                        <span>🏆</span>
-                                        <span>Locus Award for Best First Novel (Nominee)</span>
-                                    </li>
-                                    <li className="flex items-start gap-2">
-                                        <span>🏆</span>
-                                        <span>Georgia Peach Book Award (Honor)</span>
-                                    </li>
-                                    <li className="flex items-start gap-2">
-                                        <span>⭐</span>
-                                        <span>Abraham Lincoln Award (Nominee)</span>
-                                    </li>
-                                </ul>
+                                )}
                             </div>
 
                             <div>

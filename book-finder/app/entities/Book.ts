@@ -89,4 +89,23 @@ export class Book {
     getBuyLink(): string {
         return this.bookData?.saleInfo?.buyLink || "";
     }
+
+    getDescription(): string {
+        return this.bookData?.volumeInfo?.description || "";
+    }
+
+    getGenres(): string[] {
+        return this.bookData?.volumeInfo?.categories || [];
+    }
+
+    getAverageRating(): number {
+        var averageRating = this.bookData?.volumeInfo?.averageRating || 0;
+        averageRating = parseFloat(averageRating);
+
+        return averageRating;
+    }
+
+    getRatingCount(): number {
+        return this.bookData?.volumeInfo?.ratingsCount || 0;
+    }
 }
