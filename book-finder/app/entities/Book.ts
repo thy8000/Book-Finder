@@ -33,7 +33,8 @@ export class Book {
     }
 
     getDescription(): string {
-        return this.bookData?.volumeInfo?.description || "";
+        const description = this.bookData?.volumeInfo?.description || "";
+        return description.replace(/<[^>]*>/g, '');
     }
 
     getLink(): string {
@@ -88,10 +89,6 @@ export class Book {
 
     getBuyLink(): string {
         return this.bookData?.saleInfo?.buyLink || "";
-    }
-
-    getDescription(): string {
-        return this.bookData?.volumeInfo?.description || "";
     }
 
     getGenres(): string[] {

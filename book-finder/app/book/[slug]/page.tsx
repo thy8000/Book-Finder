@@ -2,7 +2,7 @@
 
 import { use, useEffect, useState } from "react";
 
-import { Header } from "@/app/components";
+import { Header, BookCard } from "@/app/components";
 import { GoogleBooksService } from "@/app/services/GoogleBooks";
 import { Book } from "@/app/entities/Book";
 
@@ -16,6 +16,8 @@ export default function Page({
     const { slug } = use(params);
     const [bookData, setBookData] = useState<Book | null>(null);
     const [bookError, setBookError] = useState<string | null>(null);
+    const [relatedBooks, setRelatedBooks] = useState<any[]>([]);
+    const [relatedBooksError, setRelatedBooksError] = useState<string | null>(null);
 
     useEffect(() => {
         const service = new GoogleBooksService();
@@ -33,6 +35,25 @@ export default function Page({
 
         fetchBook();
     }, [slug]);
+
+    useEffect(() => {
+        if (!bookData) return;
+
+        const service = new GoogleBooksService();
+
+        const fetchRelatedBooks = async () => {
+            const { data, status } = await service.getRelatedBooks(bookData.getAuthors() || []);
+
+            if (status !== 200) {
+                setRelatedBooksError(data?.error || "Erro ao buscar livros relacionados");
+                return;
+            }
+
+            setRelatedBooks(data.items || []);
+        };
+
+        fetchRelatedBooks();
+    }, [bookData]);
 
     return (
         <div>
@@ -119,7 +140,7 @@ export default function Page({
 
                             {bookData?.getDescription() && (
                                 <section>
-                                    <h3 className="text-2xl font-bold text-neutral-100 mb-4 border-b pb-2">Sinopse</h3>
+                                    <h3 className="text-2xl font-bold text-neutral-100 mb-4 border-b border-neutral-700 pb-2">Sinopse</h3>
                                     <div className="prose max-w-none text-neutral-300 leading-relaxed space-y-4">
                                         {bookData.getDescription()}
                                     </div>
@@ -143,7 +164,7 @@ export default function Page({
                                     </div>
                                 )}
 
-                                {!Number.isNaN(bookData?.getAverageRating()) && (
+                                {!Number.isNaN(bookData?.getAverageRating()) && Number(bookData?.getAverageRating()) > 0 && (
                                     <div className="mb-6">
                                         <h4 className="text-sm font-semibold text-neutral-100 mb-2">Classificação (Média)</h4>
                                         <div className="flex flex-wrap gap-2">
@@ -158,74 +179,20 @@ export default function Page({
                                     </div>
                                 )}
                             </div>
-
-                            <div>
-                                <h3 className="font-bold text-gray-900 mb-3 pb-2 border-b">Detalhes do Universo</h3>
-
-                                <div className="mb-4">
-                                    <span className="block text-xs text-gray-500 uppercase font-bold mb-1">Idioma Original</span>
-                                    <p className="text-gray-800">Inglês</p>
-                                </div>
-
-                                <div className="mb-4">
-                                    <span className="block text-xs text-gray-500 uppercase font-bold mb-2">Personagens Principais</span>
-                                    <ul className="list-disc list-inside text-sm text-gray-700 space-y-1">
-                                        <li>Clary Fray</li>
-                                        <li>Jace Wayland</li>
-                                        <li>Alec Lightwood</li>
-                                        <li>Isabelle Lightwood</li>
-                                        <li>Simon Lewis</li>
-                                    </ul>
-                                </div>
-                            </div>
-
                         </aside>
                     </div>
 
-                    <section className="mt-16 pt-10 border-t border-gray-200">
-                        <h2 className="text-2xl font-bold text-gray-900 mb-6">Livros Relacionados</h2>
+                    {relatedBooks && relatedBooks.length > 0 && (
+                        <section className="mt-16 pt-10 border-t border-neutral-700">
+                            <h2 className="text-2xl font-bold text-neutral-100 mb-6">Livros Relacionados</h2>
 
-                        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">
-                            <div className="group cursor-pointer">
-                                <div className="bg-gray-200 aspect-[2/3] rounded-md mb-3 overflow-hidden">
-                                    <img src="https://placehold.co/200x300/e5e7eb/9ca3af?text=Livro+2" className="w-full h-full object-cover group-hover:scale-105 transition duration-300" />
-                                </div>
-                                <h4 className="font-bold text-gray-900 text-sm leading-tight group-hover:text-blue-600">Cidade das Cinzas</h4>
-                                <p className="text-xs text-gray-500 mt-1">Vol. 2</p>
+                            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">
+                                {relatedBooks.map((book: any) => (
+                                    <BookCard key={book.id} bookData={book} />
+                                ))}
                             </div>
-
-                            <div className="group cursor-pointer">
-                                <div className="bg-gray-200 aspect-[2/3] rounded-md mb-3 overflow-hidden">
-                                    <img src="https://placehold.co/200x300/e5e7eb/9ca3af?text=Livro+3" className="w-full h-full object-cover group-hover:scale-105 transition duration-300" />
-                                </div>
-                                <h4 className="font-bold text-gray-900 text-sm leading-tight group-hover:text-blue-600">Cidade de Vidro</h4>
-                                <p className="text-xs text-gray-500 mt-1">Vol. 3</p>
-                            </div>
-
-                            <div className="group cursor-pointer">
-                                <div className="bg-gray-200 aspect-[2/3] rounded-md mb-3 overflow-hidden">
-                                    <img src="https://placehold.co/200x300/e5e7eb/9ca3af?text=Livro+4" className="w-full h-full object-cover group-hover:scale-105 transition duration-300" />
-                                </div>
-                                <h4 className="font-bold text-gray-900 text-sm leading-tight group-hover:text-blue-600">Cidade dos Anjos Caídos</h4>
-                                <p className="text-xs text-gray-500 mt-1">Vol. 4</p>
-                            </div>
-
-                            <div className="group cursor-pointer">
-                                <div className="bg-gray-200 aspect-[2/3] rounded-md mb-3 overflow-hidden">
-                                    <img src="https://placehold.co/200x300/e5e7eb/9ca3af?text=Livro+5" className="w-full h-full object-cover group-hover:scale-105 transition duration-300" />
-                                </div>
-                                <h4 className="font-bold text-gray-900 text-sm leading-tight group-hover:text-blue-600">Cidade das Almas Perdidas</h4>
-                                <p className="text-xs text-gray-500 mt-1">Vol. 5</p>
-                            </div>
-                            <div className="group cursor-pointer hidden lg:block">
-                                <div className="bg-gray-200 aspect-[2/3] rounded-md mb-3 overflow-hidden">
-                                    <img src="https://placehold.co/200x300/e5e7eb/9ca3af?text=Outra+Série" className="w-full h-full object-cover group-hover:scale-105 transition duration-300" />
-                                </div>
-                                <h4 className="font-bold text-gray-900 text-sm leading-tight group-hover:text-blue-600">Anjo Mecânico</h4>
-                                <p className="text-xs text-gray-500 mt-1">Peças Infernais</p>
-                            </div>
-                        </div>
-                    </section>
+                        </section>
+                    )}
                 </div>
             </main>
         </div>

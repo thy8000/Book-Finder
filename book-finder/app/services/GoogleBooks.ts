@@ -56,5 +56,28 @@ export class GoogleBooksService {
     }
   }
 
+  async getRelatedBooks(author: string[]): Promise<{ data: any; status: number }> {
+    try {
+      const url = new URL("api/related-books", window.location.origin);
 
+      const response = await fetch(url.toString(), {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ author }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        return { data: { error: data.error || "Erro ao buscar livros relacionados" }, status: response.status };
+      }
+
+      return { data, status: 200 };
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "Erro desconhecido ao buscar livros relacionados";
+      return { data: { error: errorMessage }, status: 500 };
+    }
+  }
 }
