@@ -29,7 +29,8 @@ export class Book {
     }
 
     getThumbnail(size: string = 'thumbnail'): string {
-        return this.bookData?.volumeInfo?.imageLinks?.[size] || "";
+        const url = this.bookData?.volumeInfo?.imageLinks?.[size] || "";
+        return url.replace(/^http:/, 'https:');
     }
 
     getDescription(): string {
